@@ -24,8 +24,9 @@ export default function Login() {
 		if (!res.ok) alert("Invalid Credentials");
 
 		signIn(res.data);
-  };
-  
+	};
+
+	console.log(session);  
   if (session) {
     return <Redirect href={"/"}/>
   }

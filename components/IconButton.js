@@ -1,15 +1,22 @@
 import { View } from "react-native";
 
-function IconButton({ backgroundColor, children }) {
+function IconButton({
+	backgroundColor,
+	size = 40,
+	borderRadius = 60,
+	extraStyles,
+	children,
+}) {
 	return (
 		<View
 			style={{
 				backgroundColor,
-				width: 40,
-				height: 40,
-				borderRadius: 50,
+				width: size,
+				height: size,
+				borderRadius,
 				justifyContent: "center",
 				alignItems: "center",
+				...extraStyles,
 			}}>
 			{children}
 		</View>

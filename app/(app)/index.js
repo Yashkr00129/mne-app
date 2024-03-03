@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 import { useState } from "react";
@@ -7,29 +7,34 @@ import colors from "../../config/colors";
 import IconButton from "../../components/IconButton";
 import AppButton from "../../components/Button";
 import { useSession } from "../../auth/context";
+import { router } from "expo-router";
 
 export default function App() {
-	const { signOut } = useSession();
+	const { signOut, session } = useSession();
+
 	return (
 		<View style={styles.screen}>
 			<View style={{ width: "100%", marginBottom: 20 }}>
 				<Text style={{ fontSize: 20 }}>Hello,</Text>
 				<Text style={{ fontSize: 32, fontWeight: "bold", color: colors.pink }}>
-					Jyana Ranjan
+					{session.name}
 				</Text>
 			</View>
-			<View style={{ ...styles.card, backgroundColor: colors.pink }}>
-				<Text style={{ color: colors.white, fontSize: 24, fontWeight: "bold" }}>
-					Add New Entry
-				</Text>
-				<IconButton backgroundColor={"#f77f96"}>
-					<AntDesign
-						name="arrowright"
-						size={24}
-						color={colors.white}
-					/>
-				</IconButton>
-			</View>
+			<TouchableOpacity onPress={() => router.push("/add-entry")}>
+				<View style={{ ...styles.card, backgroundColor: colors.pink }}>
+					<Text
+						style={{ color: colors.white, fontSize: 24, fontWeight: "bold" }}>
+						Add New Entry
+					</Text>
+					<IconButton backgroundColor={"#f77f96"}>
+						<AntDesign
+							name="arrowright"
+							size={24}
+							color={colors.white}
+						/>
+					</IconButton>
+				</View>
+			</TouchableOpacity>
 			<View style={{ ...styles.card, backgroundColor: colors.light }}>
 				<View>
 					<Text style={{ fontSize: 24, fontWeight: "bold" }}>My Entries</Text>

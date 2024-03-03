@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import * as React from "react";
 import { Platform } from "react-native";
 
-function asyncState(initialValue = [true, null]) {
+function useAsyncState(initialValue = [true, null]) {
 	return React.useReducer(
 		(state, action = null) => [false, action],
 		initialValue
@@ -31,7 +31,7 @@ export async function setStorageValue(key, value) {
 
 export function getStorageValue(key) {
 	// Public
-	const [state, setState] = asyncState();
+	const [state, setState] = useAsyncState();
 
 	// Get
 	React.useEffect(() => {
