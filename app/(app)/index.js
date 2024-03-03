@@ -1,24 +1,15 @@
 import { StatusBar } from "expo-status-bar";
-import {
-	StyleSheet,
-	Text,
-	View,
-	TextInput,
-	KeyboardAvoidingView,
-	Image,
-} from "react-native";
-import { SvgUri } from "react-native-svg";
+import { StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-import Logo from "../components/Logo";
 import { useState } from "react";
-import AppButton from "../components/Button";
-import colors from "../config/colors";
-import IconButton from "../components/IconButton";
+import colors from "../../config/colors";
+import IconButton from "../../components/IconButton";
+import AppButton from "../../components/Button";
+import { useSession } from "../../auth/context";
 
 export default function App() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	const { signOut } = useSession();
 	return (
 		<View style={styles.screen}>
 			<View style={{ width: "100%", marginBottom: 20 }}>
@@ -52,6 +43,10 @@ export default function App() {
 					/>
 				</IconButton>
 			</View>
+			<AppButton
+				title={"Sign Out"}
+				onPress={signOut}
+			/>
 		</View>
 	);
 }

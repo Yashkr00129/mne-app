@@ -9,10 +9,27 @@ import {
 import { useState } from "react";
 import Logo from "../../components/Logo";
 import AppButton from "../../components/Button";
+import { Redirect, router } from "expo-router";
+import { useSession } from "../../auth/context";
+import apiClient from "../../api/client";
 
-export default function App() {
-	const [username, setUsername] = useState("");
+export default function Login() {
+	const { signIn, session } = useSession();
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+	const onSubmit = async () => {
+		const res = await apiClient.post("/api/auth", { email, password });
+
+		if (!res.ok) alert("Invalid Credentials");
+
+		signIn(res.data);
+  };
+  
+  if (session) {
+    return <Redirect href={"/"}/>
+  }
+
 	return (
 		<KeyboardAvoidingView style={styles.container}>
 			<StatusBar style="auto" />
@@ -24,11 +41,13 @@ export default function App() {
 				</Text>
 			</View>
 			<View style={styles.inputContainer}>
-				<Text>Username</Text>
+				<Text>Email</Text>
 				<TextInput
 					style={styles.input}
-					value={username}
-					onChange={setUsername}
+					value={email}
+					textContentType="emailAddress"
+					keyboardType="email-address"
+					onChangeText={setEmail}
 				/>
 			</View>
 			<View style={styles.inputContainer}>
@@ -38,10 +57,13 @@ export default function App() {
 					value={password}
 					secureTextEntry
 					textContentType="password"
-					onChange={setPassword}
+					onChangeText={setPassword}
 				/>
 			</View>
-			<AppButton title="Login" />
+			<AppButton
+				title="Login"
+				onPress={onSubmit}
+			/>
 		</KeyboardAvoidingView>
 	);
 }

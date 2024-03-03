@@ -1,28 +1,17 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
+import { Stack } from "expo-router/stack";
+import { SessionProvider } from "../auth/context";
 
 export default function Layout() {
-	// Check if token is present in store.
-	// If token is present, then get the user data.
-	// After getting the userdata
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<Drawer>
-				<Drawer.Screen
-					name="index"
-					options={{
-						drawerLabel: "Home",
-						title: "overview",
+			<SessionProvider>
+				<Stack
+					screenOptions={{
+						headerShown: false,
 					}}
 				/>
-				<Drawer.Screen
-					name="login/index"
-					options={{
-						drawerLabel: "Login",
-						title: "overview",
-					}}
-				/>
-			</Drawer>
+			</SessionProvider>
 		</GestureHandlerRootView>
 	);
 }
