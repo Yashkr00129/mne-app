@@ -132,3 +132,14 @@ const styles = StyleSheet.create({
 		padding: 15,
 	},
 });
+
+// Next task
+// The number of bags that are entered, will be the number of bag inputs
+// State in each will be individually managed.
+// Add Date Picker
+// Implement Dropdown
+
+
+// Admin Panel
+// Login
+// Create Dashboard UI
