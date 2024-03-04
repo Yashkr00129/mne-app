@@ -5,8 +5,93 @@ import IconButton from "../../../components/IconButton";
 import TextField from "../../../components/Input";
 import BagInput from "../../../components/add-entry/BagInput";
 import AppButton from "../../../components/Button";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useEffect, useState } from "react";
+import apiClient from "../../../api/client";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 export default function AddEntry() {
+	const [parties, setParties] = useState([]);
+	const [formData, setFormData] = useState({
+		sNo: "",
+		ratePerQuintal: "",
+		picture: "",
+		mark: "",
+		party: "",
+		materialCenter: "",
+		noOfBags: "",
+		bags: [{ sNo: 1, weight: 0 }],
+		lessTare: 0,
+		totalWeight: 0,
+		netWeight: 0,
+		date: new Date(),
+	});
+
+	const showDateTimePicker = () => {
+		DateTimePickerAndroid.open({
+			value: formData.date,
+			onChange: (e, selectedDate) =>
+				setFormData({ ...formData, date: selectedDate }),
+			mode: "date",
+			is24Hour: true,
+		});
+	};
+
+	useEffect(() => {
+		apiClient.get("/api/party").then((res) => setParties(res.data));
+	}, []);
+
+	useEffect(() => {
+		let updatedBags = [...formData.bags];
+
+		let newSNo =
+			formData.bags.length > 0
+				? formData.bags[formData.bags.length - 1].sNo + 1
+				: 1;
+
+		const diff = formData.noOfBags - formData.bags.length;
+
+		if (diff > 0) {
+			for (let i = 0; i < diff; i++) {
+				const newBag = {
+					sNo: newSNo++,
+				};
+				updatedBags.push(newBag);
+			}
+		} else if (diff < 0) {
+			updatedBags = updatedBags.slice(0, formData.noOfBags);
+		}
+
+		setFormData({ ...formData, bags: updatedBags });
+	}, [formData.noOfBags]);
+
+	useEffect(() => {
+		const netWeight = formData.totalWeight - formData.lessTare;
+		setFormData((prevFormData) => ({ ...prevFormData, netWeight }));
+	}, [formData.lessTare]);
+
+	useEffect(() => {
+		const totalWeight = formData.bags.reduce(
+			(acc, bag) => acc + parseFloat(bag.weight || 0),
+			0
+		);
+
+		setFormData((prevFormData) => ({ ...prevFormData, totalWeight }));
+	}, [formData.bags, formData.totalWeight]);
+
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleWeightChange = (index, newWeight) => {
+		const bags = [...formData.bags];
+		bags[index].weight = newWeight;
+		setFormData({ ...formData, bags });
+	};
+
+	const onSubmit = () => apiClient.post("/api/entry", formData);
+
 	return (
 		<ScrollView style={styles.screen}>
 			<View
@@ -51,10 +136,12 @@ export default function AddEntry() {
 					/>
 				</View>
 			</View>
-			<TextField
-				label="Date"
-				style={styles.input}
-			/>
+			<TouchableOpacity onPress={showDateTimePicker}>
+				<View style={styles.input}>
+					<Text>{formData.date.toLocaleDateString()}</Text>
+				</View>
+			</TouchableOpacity>
+
 			<TextField
 				label={"Party Name"}
 				style={styles.input}
@@ -138,8 +225,3 @@ const styles = StyleSheet.create({
 // State in each will be individually managed.
 // Add Date Picker
 // Implement Dropdown
-
-
-// Admin Panel
-// Login
-// Create Dashboard UI
