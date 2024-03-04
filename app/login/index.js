@@ -26,7 +26,6 @@ export default function Login() {
 		signIn(res.data);
 	};
 
-	console.log(session);  
   if (session) {
     return <Redirect href={"/"}/>
   }

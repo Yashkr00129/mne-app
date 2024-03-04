@@ -11,9 +11,13 @@ export default function AppLayout() {
 		return <Text>Loading...</Text>;
 	}
 
+	console.log(session);
+	console.log(typeof session);
+
 	if (!session) {
 		return <Redirect href="/login" />;
 	}
 
 	return <Drawer />;
 }
+ 
