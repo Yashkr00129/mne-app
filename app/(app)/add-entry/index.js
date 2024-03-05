@@ -13,6 +13,7 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import { SelectField, SelectOption } from "../../../components/Select";
 import DateField from "../../../components/DateField";
+import { NetInfo } from "react-native";
 
 export default function AddEntry() {
 	const [parties, setParties] = useState([]);

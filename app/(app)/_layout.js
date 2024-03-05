@@ -18,6 +18,30 @@ export default function AppLayout() {
 		return <Redirect href="/login" />;
 	}
 
-	return <Drawer />;
+	return (
+		<Drawer>
+			<Drawer.Screen
+				name="index" // This is the name of the page and must match the url from root
+				options={{
+					drawerLabel: "Home",
+					title: "Home",
+				}}
+			/>
+			<Drawer.Screen
+				name="add-entry/index" // This is the name of the page and must match the url from root
+				options={{
+					drawerLabel: "Add Entry",
+					title: "Add Entry",
+				}}
+			/>
+			<Drawer.Screen
+				name="entries/index" // This is the name of the page and must match the url from root
+				options={{
+					drawerLabel: "My Entries",
+					title: "My Entries",
+				}}
+			/>
+		</Drawer>
+	);
 }
  
