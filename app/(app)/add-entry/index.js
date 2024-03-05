@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import apiClient from "../../../api/client";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import { SelectField, SelectOption } from "../../../components/Select";
+import DateField from "../../../components/DateField";
 
 export default function AddEntry() {
 	const [parties, setParties] = useState([]);
@@ -20,23 +23,13 @@ export default function AddEntry() {
 		mark: "",
 		party: "",
 		materialCenter: "",
-		noOfBags: "",
+		noOfBags: 1,
 		bags: [{ sNo: 1, weight: 0 }],
 		lessTare: 0,
 		totalWeight: 0,
 		netWeight: 0,
 		date: new Date(),
 	});
-
-	const showDateTimePicker = () => {
-		DateTimePickerAndroid.open({
-			value: formData.date,
-			onChange: (e, selectedDate) =>
-				setFormData({ ...formData, date: selectedDate }),
-			mode: "date",
-			is24Hour: true,
-		});
-	};
 
 	useEffect(() => {
 		apiClient.get("/api/party").then((res) => setParties(res.data));
@@ -80,17 +73,32 @@ export default function AddEntry() {
 		setFormData((prevFormData) => ({ ...prevFormData, totalWeight }));
 	}, [formData.bags, formData.totalWeight]);
 
-	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
-
 	const handleWeightChange = (index, newWeight) => {
 		const bags = [...formData.bags];
 		bags[index].weight = newWeight;
 		setFormData({ ...formData, bags });
 	};
 
-	const onSubmit = () => apiClient.post("/api/entry", formData);
+	const onSubmit = () =>
+		apiClient.post("/api/entry", formData).then((res) => {
+			if (res.ok) {
+				alert("Entry Successful");
+				setFormData({
+					sNo: "",
+					ratePerQuintal: "",
+					picture: "",
+					mark: "",
+					party: "",
+					materialCenter: "",
+					noOfBags: 1,
+					bags: [{ sNo: 1, weight: 0 }],
+					lessTare: 0,
+					totalWeight: 0,
+					netWeight: 0,
+					date: new Date(),
+				});
+			}
+		});
 
 	return (
 		<ScrollView style={styles.screen}>
@@ -136,27 +144,63 @@ export default function AddEntry() {
 					/>
 				</View>
 			</View>
-			<TouchableOpacity onPress={showDateTimePicker}>
-				<View style={styles.input}>
-					<Text>{formData.date.toLocaleDateString()}</Text>
-				</View>
-			</TouchableOpacity>
-
-			<TextField
-				label={"Party Name"}
-				style={styles.input}
+			<DateField
+				onChange={(e, selectedDate) =>
+					setFormData({ ...formData, date: selectedDate })
+				}
+				value={formData.date}
 			/>
+			<SelectField
+				label={"Party Name"}
+				onChange={(party) => setFormData({ ...formData, party })}>
+				{parties.map((party) => (
+					<SelectOption
+						label={party.partyName}
+						value={party._id}
+					/>
+				))}
+			</SelectField>
+			<SelectField
+				label="Material Center"
+				selectedValue={formData.materialCenter}
+				onChange={(materialCenter) =>
+					setFormData({ ...formData, materialCenter })
+				}>
+				<SelectOption
+					label="Yard"
+					value="yard"
+				/>
+				<SelectOption
+					label="Cold"
+					value="cold"
+				/>
+				<SelectOption
+					label="Godown"
+					value="godown"
+				/>
+			</SelectField>
 			<View style={styles.inputGrid}>
 				<View style={{ width: "45%" }}>
-					<TextField
-						style={styles.input}
-						label="Mark"
-					/>
+					<SelectField
+						label={"Mark"}
+						selectedValue={formData.mark}
+						onChange={(mark) => setFormData({ ...formData, mark })}>
+						<SelectOption
+							label="abc"
+							value="abc"
+						/>
+						<SelectOption
+							label="xyz"
+							value="abc"
+						/>
+					</SelectField>
 				</View>
 				<View style={{ width: "45%" }}>
 					<TextField
 						style={styles.input}
 						label="Number Of Bags"
+						onChangeText={(noOfBags) => setFormData({ ...formData, noOfBags })}
+						keyboardType="number-pad"
 					/>
 				</View>
 			</View>
@@ -164,31 +208,79 @@ export default function AddEntry() {
 				<View style={{ width: "45%" }}>
 					<TextField
 						style={styles.input}
-						label="S.no"
+						label="S.No"
+						onChangeText={(sNo) => setFormData({ ...formData, sNo })}
 					/>
 				</View>
 				<View style={{ width: "45%" }}>
 					<TextField
 						style={styles.input}
 						label="Rate per quintal"
+						onChangeText={(ratePerQuintal) =>
+							setFormData({ ...formData, ratePerQuintal })
+						}
 					/>
 				</View>
 			</View>
-			<Text style={styles.heading}>Add Bags</Text>
-			<BagInput />
-			<TextField
-				style={styles.input}
-				label="Total Weight (IN KGS)"
-			/>
+			{/* Bag Creation */}
+			<View style={styles.bagContainer}>
+				<Text style={styles.heading}>Bags</Text>
+				{formData.bags.map((bag, index) => (
+					<View
+						style={styles.bagCreateInput}
+						key={bag.sNo}>
+						<View style={{ ...styles.input, width: "25%" }}>
+							<Text>{bag.sNo}</Text>
+						</View>
+						<TextInput
+							style={{ ...styles.input, width: "50%" }}
+							onChangeText={(text) => handleWeightChange(index, text)}
+							keyboardType="numeric"
+						/>
+						<IconButton
+							backgroundColor={colors.light}
+							size={50}>
+							<AntDesign
+								name="delete"
+								size={24}
+								color="black"
+							/>
+						</IconButton>
+					</View>
+				))}
+			</View>
+			<Text style={{ fontWeight: "bold", fontSize: 16 }}>Total Weight</Text>
+			<TouchableOpacity
+				onPress={() =>
+					alert(
+						"This field can not be edited. It will be automatically calculated."
+					)
+				}>
+				<View style={{ ...styles.input }}>
+					<Text>{formData.totalWeight}</Text>
+				</View>
+			</TouchableOpacity>
 			<TextField
 				style={styles.input}
 				label="Less tare"
+				keyboardType="numeric"
+				onChangeText={(lessTare) => setFormData({ ...formData, lessTare })}
 			/>
-			<TextField
-				style={styles.input}
-				label="Net Weight"
+			<TouchableOpacity
+				onPress={() =>
+					alert(
+						"This field can not be edited. It will be automatically calculated."
+					)
+				}>
+				<Text style={{ fontWeight: "bold", fontSize: 16 }}>Net Weight</Text>
+				<View style={{ ...styles.input }}>
+					<Text>{formData.netWeight}</Text>
+				</View>
+			</TouchableOpacity>
+			<AppButton
+				title="Submit"
+				onPress={onSubmit}
 			/>
-			<AppButton title="Submit" />
 			<View style={{ height: 50 }} />
 		</ScrollView>
 	);
@@ -202,6 +294,21 @@ const styles = StyleSheet.create({
 		padding: 20,
 		width: "100%",
 		paddingBottom: 50,
+	},
+	bagContainer: {
+		paddingVertical: 10,
+		marginVertical: 10,
+		borderTopColor: colors.light,
+		borderTopWidth: 1,
+		borderBottomColor: colors.light,
+		borderBottomWidth: 1,
+	},
+	bagCreateInput: {
+		width: "100%",
+		flexDirection: "row",
+		gap: 10,
+		alignItems: "center",
+		justifyContent: "space-between",
 	},
 	heading: {
 		fontSize: 25,
@@ -217,11 +324,11 @@ const styles = StyleSheet.create({
 		borderColor: colors.red,
 		borderRadius: 15,
 		padding: 15,
+		height: 50,
 	},
 });
 
 // Next task
 // The number of bags that are entered, will be the number of bag inputs
 // State in each will be individually managed.
-// Add Date Picker
 // Implement Dropdown

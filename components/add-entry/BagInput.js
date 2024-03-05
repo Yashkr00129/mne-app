@@ -1,15 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
-import { TextInput } from "react-native-gesture-handler";
 import IconButton from "../IconButton";
 import colors from "../../config/colors";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function BagInput() {
+export default function BagInput({ sNo, index, handleWeightChange }) {
 	return (
 		<View style={styles.container}>
-			<TextInput style={styles.input} />
-			<TextInput style={styles.input} />
+			<TextInput
+				style={styles.input}
+				value={sNo}
+			/>
+			<TextInput
+				style={styles.input}
+				onChangeText={(text) => handleWeightChange(index, text)}
+			/>
 			<IconButton
 				backgroundColor={colors.light}
 				size={50}>
