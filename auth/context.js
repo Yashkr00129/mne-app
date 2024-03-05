@@ -1,5 +1,5 @@
 import React from "react";
-import { getStorageValue } from "./useStorageState";
+import { getStorageValue, setStorageValue } from "./useStorageState";
 import apiClient from "../api/client";
 
 const AuthContext = React.createContext({
@@ -35,6 +35,8 @@ export function SessionProvider(props) {
 							console.log(err);
 						}
 					});
+					
+					setStorageValue("token", session.token);
 
 					const res = await apiClient.get("/api/auth");
 					if (!res.ok) alert("User does not exist.");

@@ -10,7 +10,7 @@ function useAsyncState(initialValue = [true, null]) {
 }
 
 
-const setStorageValue = async (key, value) => {
+export const setStorageValue = async (key, value) => {
 	try {
 		await SecureStore.setItemAsync(key, value);
 	} catch (error) {

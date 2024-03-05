@@ -9,11 +9,11 @@ const apiClient = create({
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {
-	// const authToken = await SecureStore.getItemAsync("token").catch((err) =>
-	// 	console.log(err)
-	// );
-	// if (!authToken) return;
-	// request.headers["Authorization"] = authToken;
+	const authToken = await SecureStore.getItemAsync("token").catch((err) =>
+		console.log(err)
+	);
+	if (!authToken) return;
+	request.headers["Authorization"] = authToken;
 });
 
 const get = apiClient.get;
