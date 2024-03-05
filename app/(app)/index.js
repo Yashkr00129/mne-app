@@ -35,19 +35,21 @@ export default function App() {
 					</IconButton>
 				</View>
 			</TouchableOpacity>
-			<View style={{ ...styles.card, backgroundColor: colors.light }}>
-				<View>
-					<Text style={{ fontSize: 24, fontWeight: "bold" }}>My Entries</Text>
-					<Text style={{ fontSize: 24, fontWeight: "bold" }}>10</Text>
+			<TouchableOpacity onPress={() => router.push("/entries")}>
+				<View style={{ ...styles.card, backgroundColor: colors.light }}>
+					<View>
+						<Text style={{ fontSize: 24, fontWeight: "bold" }}>My Entries</Text>
+						{/* <Text style={{ fontSize: 24, fontWeight: "bold" }}>10</Text> */}
+					</View>
+					<IconButton backgroundColor={"#fefefe"}>
+						<AntDesign
+							name="arrowright"
+							size={24}
+							color={colors.black}
+						/>
+					</IconButton>
 				</View>
-				<IconButton backgroundColor={"#fefefe"}>
-					<AntDesign
-						name="arrowright"
-						size={24}
-						color={colors.black}
-					/>
-				</IconButton>
-			</View>
+			</TouchableOpacity>
 			<AppButton
 				title={"Sign Out"}
 				onPress={signOut}
