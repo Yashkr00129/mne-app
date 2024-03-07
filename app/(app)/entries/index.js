@@ -10,6 +10,7 @@ import { SelectField, SelectOption } from "../../../components/Select";
 import { useCallback, useEffect, useState } from "react";
 import apiClient from "../../../api/client";
 import colors from "../../../config/colors";
+import qs from "qs";
 import {
 	AntDesign,
 	FontAwesome5,
@@ -47,14 +48,16 @@ export default function EntriesScreen() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await apiClient.get("/entries", {
-					params: {
-						partyId: partyIdFilter,
-						mark: markFilter,
-						date: dateFilter,
-						search: debouncedSearch,
-					},
-				});
+				const params = {
+					partyId: partyIdFilter,
+					mark: markFilter,
+					date: dateFilter,
+					search: debouncedSearch,
+				};
+
+				const queryString = qs.stringify(params);
+
+				const response = await apiClient.get(`/api/entry/me?${queryString}`);
 				if (response.ok) {
 					setEntries(response.data);
 				} else {
@@ -87,7 +90,7 @@ export default function EntriesScreen() {
 			}>
 			<SearchBar style={{ marginTop: 10 }} />
 			<View style={styles.filtersContainer}>
-				<View style={{ width: "33%" }}>
+				<View style={{ width: "49%" }}>
 					<SelectField
 						onChange={(party) => setPartyIdFilter(party)}
 						selectedValue={partyIdFilter}
@@ -101,34 +104,7 @@ export default function EntriesScreen() {
 						))}
 					</SelectField>
 				</View>
-				<View style={{ width: "33%" }}>
-					<View
-						style={{
-							borderWidth: 1,
-							borderColor: colors.red,
-							height: 50,
-							borderRadius: 15,
-						}}>
-						<Picker placeholder="Mark">
-							<Picker.Item
-								style={{ fontSize: 11 }}
-								value={null}
-								label="Mark"
-							/>
-							<Picker.Item
-								style={{ fontSize: 11 }}
-								value={"abc"}
-								label={"ABC"}
-							/>
-							<Picker.Item
-								style={{ fontSize: 11 }}
-								value={null}
-								label={"Clear"}
-							/>
-						</Picker>
-					</View>
-				</View>
-				<View style={{ width: "33%" }}>
+				<View style={{ width: "49%" }}>
 					<DateField
 						style={{ marginVertical: 0 }}
 						value={null}
@@ -143,6 +119,7 @@ export default function EntriesScreen() {
 						borderColor: colors.red,
 						padding: 10,
 						borderRadius: 10,
+						marginBottom: 10,
 					}}>
 					<View style={styles.entryField}>
 						<FontAwesome5
