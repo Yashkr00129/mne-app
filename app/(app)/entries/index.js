@@ -79,6 +79,8 @@ export default function EntriesScreen() {
 		apiClient.get("/api/party").then((res) => setParties(res.data));
 	}, []);
 
+	console.log(entries);
+
 	return (
 		<ScrollView
 			style={styles.screen}
@@ -141,7 +143,18 @@ export default function EntriesScreen() {
 							color={colors.red}
 							style={styles.icon}
 						/>
-						<Text>Date - {new Date(entry.date).toLocaleDateString()}</Text>
+						<Text>Date - {new Date(entry.date).toDateString()}</Text>
+					</View>
+					<View style={styles.entryField}>
+						<AntDesign
+							name="clockcircle"
+							size={24}
+							color={colors.red}
+							style={styles.icon}
+						/>
+						<Text>
+							Time - {new Date(entry.date).toUTCString().slice(-11, -7)}
+						</Text>
 					</View>
 					<View style={styles.entryField}>
 						<AntDesign
@@ -150,7 +163,7 @@ export default function EntriesScreen() {
 							color={colors.red}
 							style={styles.icon}
 						/>
-						<Text>Party name - {entry.party.partyName}</Text>
+						<Text>Party name - {entry.party?.partyName}</Text>
 					</View>
 					<View style={styles.entryField}>
 						<FontAwesome5

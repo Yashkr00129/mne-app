@@ -115,6 +115,12 @@ export default function AddEntry() {
 	}, [formData.sNo]);
 
 	const handleWeightChange = (index, newWeight) => {
+		if (newWeight % 0.5 !== 0) {
+			return alert("Only multiples of 0.5 are allowed.");
+		}
+		if (newWeight > 99) {
+			return alert("Weight must be less than 100kg");
+		}
 		const bags = [...formData.bags];
 		bags[index].weight = newWeight;
 		setFormData({ ...formData, bags });
@@ -298,7 +304,10 @@ function EntryField({ bag, handleWeightChange, index }) {
 			</View>
 			<TextInput
 				style={{ ...styles.input, width: "50%" }}
-				onChangeText={(text) => handleWeightChange(index, text)}
+				onChangeText={(text) => {
+					handleWeightChange(index, text);
+				}}
+				value={"" + bag.weight}
 				keyboardType="numeric"
 			/>
 			<IconButton
