@@ -8,6 +8,7 @@ export default function DateField({
 	value = new Date(),
 	style,
 }) {
+	console.log(value);
 	const dateValue = value?.toLocaleDateString();
 
 	return (
@@ -15,14 +16,14 @@ export default function DateField({
 			onPress={() =>
 				DateTimePickerAndroid.open({
 					value: value ? value : new Date(),
-					onChange: { onChange },
+					onChange: (e, date) => onChange(date),
 					mode: "date",
 					is24Hour: true,
 				})
 			}>
 			{heading && <Text style={styles.heading}>{heading}</Text>}
 			<View style={[styles.input, style]}>
-				<Text>{dateValue ? dateValue : "Date"}</Text>
+				<Text>{(dateValue && dateValue) || "Date"}</Text>
 			</View>
 		</TouchableOpacity>
 	);

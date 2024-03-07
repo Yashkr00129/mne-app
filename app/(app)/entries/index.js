@@ -20,6 +20,7 @@ import {
 import DateField from "../../../components/DateField";
 import { Picker } from "@react-native-picker/picker";
 import useDebounce from "../../../hooks/useDebounce";
+import ActivityIndicator from "../../../components/ActivityIndicator";
 
 export default function EntriesScreen() {
 	const [entries, setEntries] = useState([]);
@@ -28,6 +29,7 @@ export default function EntriesScreen() {
 	const [markFilter, setMarkFilter] = useState(null);
 	const [dateFilter, setDateFilter] = useState(null);
 	const [search, setSearch] = useState("");
+	const [loading, setLoading] = useState(true);
 
 	const debouncedSearch = useDebounce(search, 1000); // Adjust the delay as needed
 
@@ -46,6 +48,7 @@ export default function EntriesScreen() {
 	}, []);
 
 	useEffect(() => {
+		setLoading(true);
 		const fetchData = async () => {
 			try {
 				const params = {
@@ -65,6 +68,8 @@ export default function EntriesScreen() {
 				}
 			} catch (error) {
 				console.error("Error fetching entries:", error);
+			} finally {
+				setLoading(false);
 			}
 		};
 
@@ -79,8 +84,6 @@ export default function EntriesScreen() {
 		apiClient.get("/api/party").then((res) => setParties(res.data));
 	}, []);
 
-	console.log(entries);
-
 	return (
 		<ScrollView
 			style={styles.screen}
@@ -90,7 +93,12 @@ export default function EntriesScreen() {
 					onRefresh={handleRefresh}
 				/>
 			}>
-			<SearchBar style={{ marginTop: 10 }} />
+			<ActivityIndicator visible={loading} />
+			<SearchBar
+				style={{ marginTop: 10 }}
+				value={search}
+				onTextChange={(text) => setSearch(text)}
+			/>
 			<View style={styles.filtersContainer}>
 				<View style={{ width: "49%" }}>
 					<SelectField
@@ -113,7 +121,8 @@ export default function EntriesScreen() {
 				<View style={{ width: "49%" }}>
 					<DateField
 						style={{ marginVertical: 0 }}
-						value={null}
+						value={dateFilter}
+						onChange={setDateFilter}
 					/>
 				</View>
 			</View>

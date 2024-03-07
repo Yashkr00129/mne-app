@@ -1,11 +1,11 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import colors from "../config/colors";
 
 import { Platform } from "react-native";
 
-export default function SearchBar({ style, onTextChange }) {
+export default function SearchBar({ style, onTextChange, value }) {
 	return (
 		<View style={[styles.container, style]}>
 			<AntDesign
@@ -16,7 +16,8 @@ export default function SearchBar({ style, onTextChange }) {
 			/>
 			<TextInput
 				style={styles.text}
-				onTextChange={onTextChange}
+				onChangeText={onTextChange}
+							value={value}
 			/>
 		</View>
 	);
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 18,
-		color: colors.primary,
+		color: colors.red,
 		fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
 		width: "100%",
 	},

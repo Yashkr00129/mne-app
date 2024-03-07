@@ -151,9 +151,7 @@ export default function AddEntry() {
 
 			<DateField
 				heading={"Date"}
-				onChange={(e, selectedDate) =>
-					setFormData({ ...formData, date: selectedDate })
-				}
+				onChange={(date) => setFormData({ ...formData, date })}
 				value={formData.date}
 			/>
 			<SelectField

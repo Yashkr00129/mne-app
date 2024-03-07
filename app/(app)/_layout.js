@@ -11,9 +11,6 @@ export default function AppLayout() {
 		return <Text>Loading...</Text>;
 	}
 
-	console.log(session);
-	console.log(typeof session);
-
 	if (!session) {
 		return <Redirect href="/login" />;
 	}
@@ -21,21 +18,21 @@ export default function AppLayout() {
 	return (
 		<Drawer>
 			<Drawer.Screen
-				name="index" // This is the name of the page and must match the url from root
+				name="index"
 				options={{
 					drawerLabel: "Home",
 					title: "Home",
 				}}
 			/>
 			<Drawer.Screen
-				name="add-entry/index" // This is the name of the page and must match the url from root
+				name="add-entry/index"
 				options={{
 					drawerLabel: "Add Entry",
 					title: "Add Entry",
 				}}
 			/>
 			<Drawer.Screen
-				name="entries/index" // This is the name of the page and must match the url from root
+				name="entries/index"
 				options={{
 					drawerLabel: "My Entries",
 					title: "My Entries",
@@ -44,4 +41,3 @@ export default function AppLayout() {
 		</Drawer>
 	);
 }
- 
