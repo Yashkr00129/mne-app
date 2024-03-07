@@ -3,7 +3,6 @@ import { AntDesign } from "@expo/vector-icons";
 import colors from "../../../config/colors";
 import IconButton from "../../../components/IconButton";
 import TextField from "../../../components/Input";
-import BagInput from "../../../components/add-entry/BagInput";
 import AppButton from "../../../components/Button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useEffect, useState } from "react";
@@ -14,23 +13,42 @@ import { Picker } from "@react-native-picker/picker";
 import { SelectField, SelectOption } from "../../../components/Select";
 import DateField from "../../../components/DateField";
 import { NetInfo } from "react-native";
+import UneditableField from "../../../components/UneditableField";
+import ImagePicker from "../../../components/ImagePicker";
+
+const defaultState = {
+	sNo: "",
+	ratePerQuintal: "",
+	picture: "",
+	mark: "",
+	party: "",
+	materialCenter: "",
+	noOfBags: 1,
+	bags: [{ sNo: 1, weight: 0 }],
+	lessTare: 0,
+	totalWeight: 0,
+	netWeight: 0,
+	date: new Date(),
+};
+
+const materialCenters = [
+	{
+		label: "Yard",
+		value: "yard",
+	},
+	{
+		label: "Cold",
+		value: "cold",
+	},
+	{
+		label: "Godown",
+		value: "godown",
+	},
+];
 
 export default function AddEntry() {
 	const [parties, setParties] = useState([]);
-	const [formData, setFormData] = useState({
-		sNo: "",
-		ratePerQuintal: "",
-		picture: "",
-		mark: "",
-		party: "",
-		materialCenter: "",
-		noOfBags: 1,
-		bags: [{ sNo: 1, weight: 0 }],
-		lessTare: 0,
-		totalWeight: 0,
-		netWeight: 0,
-		date: new Date(),
-	});
+	const [formData, setFormData] = useState(defaultState);
 
 	useEffect(() => {
 		apiClient.get("/api/party").then((res) => setParties(res.data));
@@ -84,68 +102,18 @@ export default function AddEntry() {
 		apiClient.post("/api/entry", formData).then((res) => {
 			if (res.ok) {
 				alert("Entry Successful");
-				setFormData({
-					sNo: "",
-					ratePerQuintal: "",
-					picture: "",
-					mark: "",
-					party: "",
-					materialCenter: "",
-					noOfBags: 1,
-					bags: [{ sNo: 1, weight: 0 }],
-					lessTare: 0,
-					totalWeight: 0,
-					netWeight: 0,
-					date: new Date(),
-				});
+				setFormData(defaultState);
+			} else {
+				alert("Entry not successful");
 			}
 		});
 
 	return (
 		<ScrollView style={styles.screen}>
-			<View
-				style={{
-					width: "100%",
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					marginBottom: 20,
-				}}>
-				<IconButton
-					borderRadius={10}
-					size={60}
-					extraStyles={{
-						borderColor: colors.red,
-						borderWidth: 1,
-					}}>
-					<AntDesign
-						name="camera"
-						size={24}
-						color={colors.red}
-					/>
-				</IconButton>
-				<View
-					style={{
-						backgroundColor: colors.light,
-						padding: 20,
-						borderRadius: 10,
-					}}>
-					<Text style={{ fontSize: 20, fontWeight: "bold" }}>Take Photo</Text>
-				</View>
-				<View
-					style={{
-						backgroundColor: colors.light,
-						padding: 20,
-						borderRadius: 10,
-					}}>
-					<AntDesign
-						name="delete"
-						size={24}
-						color="black"
-					/>
-				</View>
-			</View>
+			<ImagePicker />
+			{/* Form Start */}
 			<DateField
+				heading={"Date"}
 				onChange={(e, selectedDate) =>
 					setFormData({ ...formData, date: selectedDate })
 				}
@@ -153,7 +121,12 @@ export default function AddEntry() {
 			/>
 			<SelectField
 				label={"Party Name"}
-				onChange={(party) => setFormData({ ...formData, party })}>
+				onChange={(party) => setFormData({ ...formData, party })}
+				selectedValue={formData.party}>
+				<SelectOption
+					value={null}
+					label="Select Party"
+				/>
 				{parties.map((party) => (
 					<SelectOption
 						label={party.partyName}
@@ -167,117 +140,68 @@ export default function AddEntry() {
 				onChange={(materialCenter) =>
 					setFormData({ ...formData, materialCenter })
 				}>
-				<SelectOption
-					label="Yard"
-					value="yard"
-				/>
-				<SelectOption
-					label="Cold"
-					value="cold"
-				/>
-				<SelectOption
-					label="Godown"
-					value="godown"
-				/>
+				{materialCenters.map((materialCenter) => (
+					<SelectOption
+						label={materialCenter.label}
+						value={materialCenter.value}
+					/>
+				))}
 			</SelectField>
 			<View style={styles.inputGrid}>
-				<View style={{ width: "45%" }}>
-					<SelectField
-						label={"Mark"}
-						selectedValue={formData.mark}
-						onChange={(mark) => setFormData({ ...formData, mark })}>
-						<SelectOption
-							label="abc"
-							value="abc"
-						/>
-						<SelectOption
-							label="xyz"
-							value="abc"
-						/>
-					</SelectField>
-				</View>
-				<View style={{ width: "45%" }}>
-					<TextField
-						style={styles.input}
-						label="Number Of Bags"
-						onChangeText={(noOfBags) => setFormData({ ...formData, noOfBags })}
-						keyboardType="number-pad"
-					/>
-				</View>
+				<TextField
+					style={styles.input}
+					containerStyle={styles.inputGridItem}
+					label="Mark"
+					value={formData.mark}
+					onChangeText={(mark) => setFormData({ ...formData, mark })}
+				/>
+				<TextField
+					style={styles.input}
+					containerStyle={styles.inputGridItem}
+					label="Number Of Bags"
+					onChangeText={(noOfBags) => setFormData({ ...formData, noOfBags })}
+					keyboardType="number-pad"
+				/>
 			</View>
 			<View style={styles.inputGrid}>
-				<View style={{ width: "45%" }}>
-					<TextField
-						style={styles.input}
-						label="S.No"
-						onChangeText={(sNo) => setFormData({ ...formData, sNo })}
-					/>
-				</View>
-				<View style={{ width: "45%" }}>
-					<TextField
-						style={styles.input}
-						label="Rate per quintal"
-						onChangeText={(ratePerQuintal) =>
-							setFormData({ ...formData, ratePerQuintal })
-						}
-					/>
-				</View>
+				<TextField
+					style={styles.input}
+					containerStyle={styles.inputGridItem}
+					label="S.No"
+					onChangeText={(sNo) => setFormData({ ...formData, sNo })}
+				/>
+				<TextField
+					style={styles.input}
+					containerStyle={styles.inputGridItem}
+					label="Rate per quintal"
+					onChangeText={(ratePerQuintal) =>
+						setFormData({ ...formData, ratePerQuintal })
+					}
+				/>
 			</View>
 			{/* Bag Creation */}
 			<View style={styles.bagContainer}>
 				<Text style={styles.heading}>Bags</Text>
 				{formData.bags.map((bag, index) => (
-					<View
-						style={styles.bagCreateInput}
-						key={bag.sNo}>
-						<View style={{ ...styles.input, width: "25%" }}>
-							<Text>{bag.sNo}</Text>
-						</View>
-						<TextInput
-							style={{ ...styles.input, width: "50%" }}
-							onChangeText={(text) => handleWeightChange(index, text)}
-							keyboardType="numeric"
-						/>
-						<IconButton
-							backgroundColor={colors.light}
-							size={50}>
-							<AntDesign
-								name="delete"
-								size={24}
-								color="black"
-							/>
-						</IconButton>
-					</View>
+					<EntryField
+						bag={bag}
+						handleWeightChange={handleWeightChange}
+						index={index}
+					/>
 				))}
 			</View>
-			<Text style={{ fontWeight: "bold", fontSize: 16 }}>Total Weight</Text>
-			<TouchableOpacity
-				onPress={() =>
-					alert(
-						"This field can not be edited. It will be automatically calculated."
-					)
-				}>
-				<View style={{ ...styles.input }}>
-					<Text>{formData.totalWeight}</Text>
-				</View>
-			</TouchableOpacity>
-			<TextField
-				style={styles.input}
-				label="Less tare"
-				keyboardType="numeric"
-				onChangeText={(lessTare) => setFormData({ ...formData, lessTare })}
+			<UneditableField
+				value={formData.totalWeight}
+				heading={"Total Weight"}
 			/>
-			<TouchableOpacity
-				onPress={() =>
-					alert(
-						"This field can not be edited. It will be automatically calculated."
-					)
-				}>
-				<Text style={{ fontWeight: "bold", fontSize: 16 }}>Net Weight</Text>
-				<View style={{ ...styles.input }}>
-					<Text>{formData.netWeight}</Text>
-				</View>
-			</TouchableOpacity>
+			<UneditableField
+				value={formData.noOfBags}
+				heading={"Less Tare"}
+			/>
+			<UneditableField
+				value={formData.netWeight}
+				heading="Net Weight"
+			/>
 			<AppButton
 				title="Submit"
 				onPress={onSubmit}
@@ -319,6 +243,9 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		gap: 10,
 	},
+	inputGridItem: {
+		width: "45%",
+	},
 	input: {
 		marginVertical: 12,
 		borderWidth: 1,
@@ -329,7 +256,28 @@ const styles = StyleSheet.create({
 	},
 });
 
-// Next task
-// The number of bags that are entered, will be the number of bag inputs
-// State in each will be individually managed.
-// Implement Dropdown
+function EntryField({ bag, handleWeightChange, index }) {
+	return (
+		<View
+			style={styles.bagCreateInput}
+			key={bag.sNo}>
+			<View style={{ ...styles.input, width: "25%" }}>
+				<Text>{bag.sNo}</Text>
+			</View>
+			<TextInput
+				style={{ ...styles.input, width: "50%" }}
+				onChangeText={(text) => handleWeightChange(index, text)}
+				keyboardType="numeric"
+			/>
+			<IconButton
+				backgroundColor={colors.light}
+				size={50}>
+				<AntDesign
+					name="delete"
+					size={24}
+					color="black"
+				/>
+			</IconButton>
+		</View>
+	);
+}

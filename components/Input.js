@@ -6,10 +6,11 @@ export default function TextField({
 	value,
 	onChangeText,
 	style,
+	containerStyle,
 	...rest
 }) {
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, containerStyle]}>
 			<Text style={styles.label}>{label}</Text>
 			<TextInput
 				style={style}
