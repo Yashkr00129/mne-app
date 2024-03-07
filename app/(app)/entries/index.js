@@ -95,6 +95,10 @@ export default function EntriesScreen() {
 						onChange={(party) => setPartyIdFilter(party)}
 						selectedValue={partyIdFilter}
 						style={{ height: 50 }}>
+						<SelectOption
+							value={null}
+							label="All Parties"
+						/>
 						{parties.map((party) => (
 							<SelectOption
 								key={party._id}
@@ -146,7 +150,7 @@ export default function EntriesScreen() {
 							color={colors.red}
 							style={styles.icon}
 						/>
-						<Text>Party name - {entry.partyName}</Text>
+						<Text>Party name - {entry.party.partyName}</Text>
 					</View>
 					<View style={styles.entryField}>
 						<FontAwesome5
