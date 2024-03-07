@@ -15,9 +15,10 @@ import DateField from "../../../components/DateField";
 import { NetInfo } from "react-native";
 import UneditableField from "../../../components/UneditableField";
 import ImagePicker from "../../../components/ImagePicker";
+import CameraInput from "../../../components/CameraInput";
 
 const defaultState = {
-	sNo: "",
+	sNo: 0,
 	ratePerQuintal: "",
 	picture: "",
 	mark: "",
@@ -68,6 +69,7 @@ export default function AddEntry() {
 			for (let i = 0; i < diff; i++) {
 				const newBag = {
 					sNo: newSNo++,
+					weight: 0,
 				};
 				updatedBags.push(newBag);
 			}
@@ -78,10 +80,11 @@ export default function AddEntry() {
 		setFormData({ ...formData, bags: updatedBags });
 	}, [formData.noOfBags]);
 
+	// This useEffect chnages netWeight based on lessTare and total weight
 	useEffect(() => {
 		const netWeight = formData.totalWeight - formData.lessTare;
 		setFormData((prevFormData) => ({ ...prevFormData, netWeight }));
-	}, [formData.lessTare]);
+	}, [formData.lessTare, formData.totalWeight]);
 
 	useEffect(() => {
 		const totalWeight = formData.bags.reduce(
@@ -91,6 +94,25 @@ export default function AddEntry() {
 
 		setFormData((prevFormData) => ({ ...prevFormData, totalWeight }));
 	}, [formData.bags, formData.totalWeight]);
+
+	useEffect(() => {
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			lessTare: formData.noOfBags,
+		}));
+	}, [formData.noOfBags]);
+
+	useEffect(() => {
+		let newSNo = formData.sNo + 1;
+
+		setFormData({
+			...formData,
+			bags: formData.bags.map((bag, index) => ({
+				...bag,
+				sNo: newSNo++,
+			})),
+		});
+	}, [formData.sNo]);
 
 	const handleWeightChange = (index, newWeight) => {
 		const bags = [...formData.bags];
@@ -110,8 +132,11 @@ export default function AddEntry() {
 
 	return (
 		<ScrollView style={styles.screen}>
-			<ImagePicker />
-			{/* Form Start */}
+			<CameraInput
+				imageUri={formData.picture}
+				onChangeImage={(picture) => setFormData({ ...formData, picture })}
+			/>
+
 			<DateField
 				heading={"Date"}
 				onChange={(e, selectedDate) =>
@@ -127,8 +152,9 @@ export default function AddEntry() {
 					value={null}
 					label="Select Party"
 				/>
-				{parties.map((party) => (
+				{parties.map((party, index) => (
 					<SelectOption
+						key={index}
 						label={party.partyName}
 						value={party._id}
 					/>
@@ -140,8 +166,9 @@ export default function AddEntry() {
 				onChange={(materialCenter) =>
 					setFormData({ ...formData, materialCenter })
 				}>
-				{materialCenters.map((materialCenter) => (
+				{materialCenters.map((materialCenter, index) => (
 					<SelectOption
+						key={index}
 						label={materialCenter.label}
 						value={materialCenter.value}
 					/>
@@ -159,7 +186,9 @@ export default function AddEntry() {
 					style={styles.input}
 					containerStyle={styles.inputGridItem}
 					label="Number Of Bags"
-					onChangeText={(noOfBags) => setFormData({ ...formData, noOfBags })}
+					onChangeText={(noOfBags) =>
+						setFormData({ ...formData, noOfBags: parseFloat(noOfBags) })
+					}
 					keyboardType="number-pad"
 				/>
 			</View>
@@ -168,7 +197,9 @@ export default function AddEntry() {
 					style={styles.input}
 					containerStyle={styles.inputGridItem}
 					label="S.No"
-					onChangeText={(sNo) => setFormData({ ...formData, sNo })}
+					onChangeText={(sNo) =>
+						setFormData({ ...formData, sNo: parseFloat(sNo) })
+					}
 				/>
 				<TextField
 					style={styles.input}
@@ -184,6 +215,7 @@ export default function AddEntry() {
 				<Text style={styles.heading}>Bags</Text>
 				{formData.bags.map((bag, index) => (
 					<EntryField
+						key={index}
 						bag={bag}
 						handleWeightChange={handleWeightChange}
 						index={index}

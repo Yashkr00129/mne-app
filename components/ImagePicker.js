@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import colors from "../config/colors";
 import IconButton from "./IconButton";
 import { AntDesign } from "@expo/vector-icons";
+import ImageInput from "./ImagePickerFromFiles";
 
-export default function ImagePicker() {
+export default function ImagePickerWithCamera() {
+	const [imageUri, setImageUri] = useState();
 	return (
 		<View
 			style={{
@@ -14,19 +16,10 @@ export default function ImagePicker() {
 				alignItems: "center",
 				marginBottom: 20,
 			}}>
-			<IconButton
-				borderRadius={10}
-				size={60}
-				extraStyles={{
-					borderColor: colors.red,
-					borderWidth: 1,
-				}}>
-				<AntDesign
-					name="camera"
-					size={24}
-					color={colors.red}
-				/>
-			</IconButton>
+			<ImageInput
+				imageUri={imageUri}
+				onChangeImage={setImageUri}
+			/>
 			<View
 				style={{
 					backgroundColor: colors.light,
@@ -34,18 +27,6 @@ export default function ImagePicker() {
 					borderRadius: 10,
 				}}>
 				<Text style={{ fontSize: 20, fontWeight: "bold" }}>Take Photo</Text>
-			</View>
-			<View
-				style={{
-					backgroundColor: colors.light,
-					padding: 20,
-					borderRadius: 10,
-				}}>
-				<AntDesign
-					name="delete"
-					size={24}
-					color="black"
-				/>
 			</View>
 		</View>
 	);
