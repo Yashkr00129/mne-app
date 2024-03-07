@@ -107,12 +107,13 @@ export default function AddEntry() {
 
 		setFormData({
 			...formData,
+			noOfBags: formData.bags.length,
 			bags: formData.bags.map((bag, index) => ({
 				...bag,
 				sNo: newSNo++,
 			})),
 		});
-	}, [formData.sNo]);
+	}, [formData.sNo, formData.bags.length]);
 
 	const handleWeightChange = (index, newWeight) => {
 		if (newWeight % 0.5 !== 0) {
@@ -124,6 +125,11 @@ export default function AddEntry() {
 		const bags = [...formData.bags];
 		bags[index].weight = newWeight;
 		setFormData({ ...formData, bags });
+	};
+
+	const deleteBag = (index) => {
+		const updatedBags = formData.bags.filter((_, i) => i !== index);
+		setFormData({ ...formData, bags: updatedBags });
 	};
 
 	const onSubmit = () =>
@@ -209,8 +215,10 @@ export default function AddEntry() {
 				/>
 				<TextField
 					style={styles.input}
+					placeholder={"₹"}
 					containerStyle={styles.inputGridItem}
-					label="Rate per quintal"
+					keyboardType="number-pad"
+					label="Rate per quintal(₹)"
 					onChangeText={(ratePerQuintal) =>
 						setFormData({ ...formData, ratePerQuintal })
 					}
@@ -224,6 +232,7 @@ export default function AddEntry() {
 						key={index}
 						bag={bag}
 						handleWeightChange={handleWeightChange}
+						deleteBag={deleteBag}
 						index={index}
 					/>
 				))}
@@ -294,7 +303,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-function EntryField({ bag, handleWeightChange, index }) {
+function EntryField({ bag, handleWeightChange, deleteBag, index }) {
 	return (
 		<View
 			style={styles.bagCreateInput}
@@ -311,6 +320,7 @@ function EntryField({ bag, handleWeightChange, index }) {
 				keyboardType="numeric"
 			/>
 			<IconButton
+				onPress={() => deleteBag(index)}
 				backgroundColor={colors.light}
 				size={50}>
 				<AntDesign

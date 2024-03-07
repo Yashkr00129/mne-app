@@ -6,6 +6,7 @@ export default function TextField({
 	value,
 	onChangeText,
 	style,
+	placeholder,
 	containerStyle,
 	...rest
 }) {
@@ -14,6 +15,7 @@ export default function TextField({
 			<Text style={styles.label}>{label}</Text>
 			<TextInput
 				style={style}
+				placeholder={placeholder}
 				value={value}
 				onChangeText={onChangeText}
 				{...rest}
