@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yashkr00129.mneapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +30,14 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "159d069b-d55f-4ad7-990e-44654987b73c"
+      }
+    }
   }
 }

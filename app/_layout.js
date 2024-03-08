@@ -11,6 +11,12 @@ export default function Layout() {
 			await executeQueuedActions();
 		}
 	});
+
+// 	addToRequestQueue({
+// method: ‘get’,
+// url: ‘https://api.example.com/data’,
+// });
+	
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SessionProvider>

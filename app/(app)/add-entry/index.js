@@ -1,20 +1,17 @@
+import { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TextInput, ScrollView } from "react-native";
+
 import { AntDesign } from "@expo/vector-icons";
+import NetInfo from "@react-native-community/netinfo";
+
 import colors from "../../../config/colors";
+import apiClient from "../../../api/client";
 import IconButton from "../../../components/IconButton";
 import TextField from "../../../components/Input";
 import AppButton from "../../../components/Button";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { useEffect, useState } from "react";
-import apiClient from "../../../api/client";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
 import { SelectField, SelectOption } from "../../../components/Select";
 import DateField from "../../../components/DateField";
-import { NetInfo } from "react-native";
 import UneditableField from "../../../components/UneditableField";
-import ImagePicker from "../../../components/ImagePicker";
 import CameraInput from "../../../components/CameraInput";
 
 const defaultState = {
@@ -48,6 +45,12 @@ const materialCenters = [
 ];
 
 export default function AddEntry() {
+	NetInfo.addEventListener(async (state) => {
+		if (state.isConnected) {
+			await executeQueuedActions();
+		}
+	});
+
 	const [parties, setParties] = useState([]);
 	const [formData, setFormData] = useState(defaultState);
 

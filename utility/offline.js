@@ -3,7 +3,7 @@ import { create } from "apisauce";
 
 const offlineActionQueueKey = "offlineActionQueue";
 const api = create({
-	baseURL: "https://api.example.com",
+	baseURL: "http://192.168.1.4:5000/",
 });
 
 // Function to add action to the queue

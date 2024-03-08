@@ -5,7 +5,7 @@ import * as SecureStore from "expo-secure-store";
 // import authStorage from "../auth/storage";
 
 const apiClient = create({
-	baseURL: "http://192.168.1.4:5000/",
+	baseURL: process.env.EXPO_PUBLIC_API_URL
 });
 
 apiClient.addAsyncRequestTransform(async (request) => {

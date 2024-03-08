@@ -2,13 +2,13 @@ import { Redirect } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useSession } from "../../auth/context";
 import { Text } from "react-native";
+import ActivityIndicator from "../../components/ActivityIndicator";
 
 export default function AppLayout() {
 	const { session, isLoading } = useSession();
 
-	// You can keep the splash screen open, or render a loading screen like we do here.
 	if (isLoading) {
-		return <Text>Loading...</Text>;
+		return <ActivityIndicator visible={isLoading} />;
 	}
 
 	if (!session) {
@@ -36,6 +36,13 @@ export default function AppLayout() {
 				options={{
 					drawerLabel: "My Entries",
 					title: "My Entries",
+				}}
+			/>
+			<Drawer.Screen
+				name="add-party/index"
+				options={{
+					drawerLabel: "Add Party",
+					title: "Add Party",
 				}}
 			/>
 		</Drawer>
