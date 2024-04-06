@@ -3,8 +3,11 @@ import { Stack } from "expo-router/stack";
 import { SessionProvider } from "../auth/context";
 import { addEventListener } from "@react-native-community/netinfo";
 import { executeQueuedActions } from "../utility/offline";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../config/firebaseConfig";
 
 export default function Layout() {
+	initializeApp(firebaseConfig);
 	const unsubscribe = addEventListener(async (state) => {
 		if (state.isConnected) {
 			await executeQueuedActions();

@@ -20,7 +20,6 @@ export default function Login() {
 
 	const onSubmit = async () => {
 		const res = await apiClient.post("/api/auth", { phone, password });
-		console.log(res.data);
 
 		if (!res.ok) return alert("Invalid Credentials");
 

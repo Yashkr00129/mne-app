@@ -18,7 +18,6 @@ export default function AddPartyPage() {
 		apiClient.post("/api/party", { ...formData }).then((res) => {
 			if (res.ok) alert("Party Created");
 			else {
-				console.log(res.data);
 				alert(res.data.errors[0].msg);
 			}
 		});

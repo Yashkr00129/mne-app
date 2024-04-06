@@ -12,14 +12,15 @@ import * as ImagePicker from "expo-image-picker";
 import colors from "../config/colors";
 
 export default function CameraInput({ imageUri, onChangeImage }) {
+	const [status, requestCameraPermission] = ImagePicker.useCameraPermissions();
+
 	useEffect(() => {
 		requestPermission();
 	}, []);
 
 	const requestPermission = async () => {
-		const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-		if (!granted)
-			alert("You need to enable permission to access media library. ");
+		const { granted } = await requestCameraPermission();
+		if (!granted) alert("You need to enable permission to access the camera. ");
 	};
 
 	const handlePress = () => {

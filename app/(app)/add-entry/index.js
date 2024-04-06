@@ -15,6 +15,7 @@ import UneditableField from "../../../components/UneditableField";
 import CameraInput from "../../../components/CameraInput";
 import OfflineNotice from "../../../components/OfflineNotice";
 import { executeQueuedActions } from "../../../utility/offline";
+import { uploadImage } from "../../../utility/uploadImages";
 
 const defaultState = {
 	sNo: 0,
@@ -58,7 +59,6 @@ export default function AddEntry() {
 
 	useEffect(() => {
 		apiClient.get("/api/party").then((res) => {
-			console.log(res.data, "data from api requset");
 			setParties(res.data);
 		});
 	}, []);
@@ -140,15 +140,20 @@ export default function AddEntry() {
 		setFormData({ ...formData, bags: updatedBags });
 	};
 
-	const onSubmit = () =>
+	const onSubmit = async () => {
+		// Write code here to upload the picture from formdata to firebase.
+		// Then add that image url to the form data.
+		const image = await uploadImage(formData.picture);
+		console.log(image);
 		apiClient.post("/api/entry", formData).then((res) => {
 			if (res.ok) {
 				alert("Entry Successful");
-				setFormData(defaultState);
+				// setFormData(defaultState);
 			} else {
 				alert("Entry not successful");
 			}
 		});
+	};
 
 	return (
 		<ScrollView style={styles.screen}>
