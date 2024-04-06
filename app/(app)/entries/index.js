@@ -122,7 +122,27 @@ export default function EntriesScreen() {
 					</SelectField>
 				</View> */}
 				<View style={{ width: "49%" }}>
-					<DropdownSelect />
+					<DropdownSelect
+						title={"Select Party"}
+						values={[
+							{ title: "Select Party", value: null },
+							...parties.map((party) => ({
+								title: party.partyName,
+								value: party._id,
+							})),
+						]}
+						defaultValue={{
+							title: "Select Party",
+							value: null,
+						}}
+						onSelect={(selectedItem) => setPartyIdFilter(selectedItem.value)}
+						triggerStyle={{
+							marginVertical: 12,
+							borderWidth: 1,
+							borderColor: colors.red,
+							borderRadius: 15,
+						}}
+					/>
 				</View>
 				<View style={{ width: "49%" }}>
 					<DateField

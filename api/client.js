@@ -6,11 +6,11 @@ import * as SecureStore from "expo-secure-store";
 
 const apiClient = create({
 	// baseURL: "https://adminapi.mnexporters.com/",
-	baseURL: "http://192.168.1.2:5000/",
+	baseURL: "http://192.168.1.17:5000/",
 });
 
 // Production base url
-// https://admin.mnexporters.com/
+// https://adminapi.mnexporters.com/
 
 apiClient.addAsyncRequestTransform(async (request) => {
 	const authToken = await SecureStore.getItemAsync("token").catch((err) =>

@@ -19,24 +19,23 @@ const emojisWithIcons = [
 	{ title: "frown", icon: "emoticon-frown-outline" },
 ];
 
-export default function DropdownSelect() {
+export default function DropdownSelect({
+	values,
+	defaultValue,
+	onSelect,
+	triggerStyle,
+	title = "Select",
+}) {
 	return (
 		<SelectDropdown
-			data={emojisWithIcons}
-			onSelect={(selectedItem, index) => {
-				console.log(selectedItem, index);
-			}}
+			data={values}
+			defaultValue={defaultValue}
+			onSelect={onSelect}
 			renderButton={(selectedItem, isOpened) => {
 				return (
-					<View style={styles.dropdownButtonStyle}>
-						{selectedItem && (
-							<Icon
-								name={selectedItem.icon}
-								style={styles.dropdownButtonIconStyle}
-							/>
-						)}
+					<View style={[styles.dropdownButtonStyle, triggerStyle]}>
 						<Text style={styles.dropdownButtonTxtStyle}>
-							{(selectedItem && selectedItem.title) || "Select your mood"}
+							{(selectedItem && selectedItem.title) || title}
 						</Text>
 						<Icon
 							name={isOpened ? "chevron-up" : "chevron-down"}
@@ -52,10 +51,6 @@ export default function DropdownSelect() {
 							...styles.dropdownItemStyle,
 							...(isSelected && { backgroundColor: "#D2D9DF" }),
 						}}>
-						<Icon
-							name={item.icon}
-							style={styles.dropdownItemIconStyle}
-						/>
 						<Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
 					</View>
 				);
