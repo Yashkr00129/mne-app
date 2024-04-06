@@ -6,7 +6,7 @@ import * as SecureStore from "expo-secure-store";
 
 const apiClient = create({
 	// baseURL: "https://adminapi.mnexporters.com/",
-	baseURL: "http://192.168.1.17:5000/",
+	baseURL: "http://192.168.1.20:5000/",
 });
 
 // Production base url

@@ -18,7 +18,7 @@ import { executeQueuedActions } from "../../../utility/offline";
 import { uploadImage } from "../../../utility/uploadImages";
 
 const defaultState = {
-	sNo: 0,
+	sNo: 1,
 	ratePerQuintal: "",
 	picture: "",
 	mark: "",
@@ -111,7 +111,7 @@ export default function AddEntry() {
 	}, [formData.noOfBags]);
 
 	useEffect(() => {
-		let newSNo = formData.sNo + 1;
+		let newSNo = formData.sNo;
 
 		setFormData({
 			...formData,
@@ -141,14 +141,12 @@ export default function AddEntry() {
 	};
 
 	const onSubmit = async () => {
-		// Write code here to upload the picture from formdata to firebase.
-		// Then add that image url to the form data.
-		const image = await uploadImage(formData.picture);
-		console.log(image);
-		apiClient.post("/api/entry", formData).then((res) => {
+		if (!formData.picture) alert("Please take a picture");
+		const picture = await uploadImage(formData.picture);
+		apiClient.post("/api/entry", { ...formData, picture }).then((res) => {
 			if (res.ok) {
 				alert("Entry Successful");
-				// setFormData(defaultState);
+				setFormData(defaultState);
 			} else {
 				alert("Entry not successful");
 			}
