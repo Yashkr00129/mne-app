@@ -15,20 +15,21 @@ import apiClient from "../../api/client";
 
 export default function Login() {
 	const { signIn, session } = useSession();
-	const [email, setEmail] = useState("");
+	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
 
 	const onSubmit = async () => {
-		const res = await apiClient.post("/api/auth", { email, password });
+		const res = await apiClient.post("/api/auth", { phone, password });
+		console.log(res.data);
 
-		if (!res.ok) alert("Invalid Credentials");
+		if (!res.ok) return alert("Invalid Credentials");
 
 		signIn(res.data);
 	};
 
-  if (session) {
-    return <Redirect href={"/"}/>
-  }
+	if (session) {
+		return <Redirect href={"/"} />;
+	}
 
 	return (
 		<KeyboardAvoidingView style={styles.container}>
@@ -41,13 +42,13 @@ export default function Login() {
 				</Text>
 			</View>
 			<View style={styles.inputContainer}>
-				<Text>Email</Text>
+				<Text>Phone</Text>
 				<TextInput
 					style={styles.input}
-					value={email}
-					textContentType="emailAddress"
-					keyboardType="email-address"
-					onChangeText={setEmail}
+					value={phone}
+					textContentType="telephoneNumber"
+					keyboardType="phone-pad"
+					onChangeText={setPhone}
 				/>
 			</View>
 			<View style={styles.inputContainer}>

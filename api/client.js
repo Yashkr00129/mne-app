@@ -5,8 +5,12 @@ import * as SecureStore from "expo-secure-store";
 // import authStorage from "../auth/storage";
 
 const apiClient = create({
-	baseURL: process.env.EXPO_PUBLIC_API_URL
+	// baseURL: "https://adminapi.mnexporters.com/",
+	baseURL: "http://192.168.1.2:5000/",
 });
+
+// Production base url
+// https://admin.mnexporters.com/
 
 apiClient.addAsyncRequestTransform(async (request) => {
 	const authToken = await SecureStore.getItemAsync("token").catch((err) =>

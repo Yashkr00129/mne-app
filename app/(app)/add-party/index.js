@@ -4,6 +4,7 @@ import apiClient from "../../../api/client";
 import TextField from "../../../components/Input";
 import colors from "../../../config/colors";
 import AppButton from "../../../components/Button";
+import OfflineNotice from "../../../components/OfflineNotice";
 
 export default function AddPartyPage() {
 	const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ export default function AddPartyPage() {
 
 	return (
 		<View style={styles.screen}>
+			<OfflineNotice />
 			<TextField
 				label="Party Name"
 				style={styles.input}

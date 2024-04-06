@@ -21,6 +21,7 @@ import DateField from "../../../components/DateField";
 import { Picker } from "@react-native-picker/picker";
 import useDebounce from "../../../hooks/useDebounce";
 import ActivityIndicator from "../../../components/ActivityIndicator";
+import DropdownSelect from "../../../components/DropdownSelect";
 
 export default function EntriesScreen() {
 	const [entries, setEntries] = useState([]);
@@ -42,7 +43,9 @@ export default function EntriesScreen() {
 		setSearch(null);
 		setPartyIdFilter(null);
 
-		apiClient.get("/api/entry/me").then(({ data }) => setEntries(data));
+		apiClient.get("/api/entry/me").then(({ data }) => {
+			setEntries(data);
+		});
 
 		setRefreshing(false);
 	}, []);
@@ -100,7 +103,7 @@ export default function EntriesScreen() {
 				onTextChange={(text) => setSearch(text)}
 			/>
 			<View style={styles.filtersContainer}>
-				<View style={{ width: "49%" }}>
+				{/* <View style={{ width: "49%" }}>
 					<SelectField
 						onChange={(party) => setPartyIdFilter(party)}
 						selectedValue={partyIdFilter}
@@ -117,6 +120,9 @@ export default function EntriesScreen() {
 							/>
 						))}
 					</SelectField>
+				</View> */}
+				<View style={{ width: "49%" }}>
+					<DropdownSelect />
 				</View>
 				<View style={{ width: "49%" }}>
 					<DateField

@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -39,7 +38,6 @@ export default function App() {
 				<View style={{ ...styles.card, backgroundColor: colors.light }}>
 					<View>
 						<Text style={{ fontSize: 24, fontWeight: "bold" }}>My Entries</Text>
-						{/* <Text style={{ fontSize: 24, fontWeight: "bold" }}>10</Text> */}
 					</View>
 					<IconButton backgroundColor={"#fefefe"}>
 						<AntDesign

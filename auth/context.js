@@ -35,7 +35,7 @@ export function SessionProvider(props) {
 							console.log(err);
 						}
 					});
-					
+
 					setStorageValue("token", session.token);
 
 					const res = await apiClient.get("/api/auth");

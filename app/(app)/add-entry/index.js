@@ -13,6 +13,7 @@ import { SelectField, SelectOption } from "../../../components/Select";
 import DateField from "../../../components/DateField";
 import UneditableField from "../../../components/UneditableField";
 import CameraInput from "../../../components/CameraInput";
+import OfflineNotice from "../../../components/OfflineNotice";
 
 const defaultState = {
 	sNo: 0,
@@ -55,7 +56,10 @@ export default function AddEntry() {
 	const [formData, setFormData] = useState(defaultState);
 
 	useEffect(() => {
-		apiClient.get("/api/party").then((res) => setParties(res.data));
+		apiClient.get("/api/party").then((res) => {
+			console.log(res.data, "data from api requset");
+			setParties(res.data);
+		});
 	}, []);
 
 	useEffect(() => {
@@ -147,11 +151,11 @@ export default function AddEntry() {
 
 	return (
 		<ScrollView style={styles.screen}>
+			<OfflineNotice />
 			<CameraInput
 				imageUri={formData.picture}
 				onChangeImage={(picture) => setFormData({ ...formData, picture })}
 			/>
-
 			<DateField
 				heading={"Date"}
 				onChange={(date) => setFormData({ ...formData, date })}
